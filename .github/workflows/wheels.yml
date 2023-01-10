@@ -1,0 +1,79 @@
+name: Wheels
+
+on:
+- push
+- workflow_dispatch
+
+# Environment variables for the automated update checks.
+env:
+  FREETYPE_VERSION: '2.12.1'
+  PDFTOTEXT_VERSION: 'v2.2.2'
+  POPPLER_VERSION: '23.01.0'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Build
+    steps:
+    - uses: actions/checkout@v3
+    - name: build
+      uses: RalfG/python-wheels-manylinux-build@v0.6.0
+      with:
+        python-versions: 'cp36-cp36m cp37-cp37m cp38-cp38 cp39-cp39 cp310-cp310 cp311-cp311'
+        system-packages: 'fontconfig-devel libjpeg-turbo-devel openjpeg2-devel freetype-devel cairo-devel cmake wget'
+        pre-build-command: 'bash prepare.sh && cd build'
+        pip-wheel-args: '-w ./dist --no-deps'
+    - name: display
+      run: ls -l build/dist
+    # Avoid restoring the cache by setting an unique key.
+    # Otherwise, the build has strange side effects.
+    - name: save wheels
+      uses: actions/cache@v3
+      with:
+        path: build/dist
+        key: wheels-${{ runner.os }}-${{ github.sha }}
+  test:
+    runs-on: ubuntu-latest
+    name: Test with Python ${{ matrix.python }}
+    needs: build
+    strategy:
+      matrix:
+        python: ['3.7' , '3.8', '3.9', '3.10', '3.11']
+    steps:
+      - name: setup test environment
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python }}
+      - name: restore wheels
+        uses: actions/cache@v3
+        with:
+          path: build/dist
+          key: wheels-${{ runner.os }}-${{ github.sha }}
+      # Due to the build taking place in a separate step, get the corresponding source again.
+      - name: download test data
+        run: |
+          wget https://github.com/jalan/pdftotext/archive/${PDFTOTEXT_VERSION}.tar.gz -O pdftotext.tar.gz
+          tar --strip-components=1 -xvzf pdftotext.tar.gz
+      # Install the wheel for the selected Python version and run the tests.
+      # The wheel for Python version 3.11 has the identifier `cp311`, so we use some Bash replacement here.
+      - name: test
+        run: |
+          WHEEL_VERSION=${{ matrix.python }}
+          python -m pip install build/dist/pdftotext-*-cp$(echo ${WHEEL_VERSION/./})-*-manylinux*.whl
+          python -m unittest discover --verbose --start-directory tests/
+  upload:
+    runs-on: ubuntu-latest
+    name: Upload wheels
+    needs: test
+    steps:
+      - name: restore wheels
+        uses: actions/cache@v3
+        with:
+          path: build/dist
+          key: wheels-${{ runner.os }}-${{ github.sha }}
+      - name: upload
+        uses: actions/upload-artifact@v3
+        with:
+          name: manylinux-wheels
+          path: |
+            build/dist/pdftotext-*manylinux*.whl
