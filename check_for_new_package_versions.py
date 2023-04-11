@@ -19,18 +19,21 @@ def fetch_latest_freetype_release():
     version = entry.find("title").text
 
     assert version, version
-    assert version.startswith('VER-'), version
-    version = version.split('VER-')[1]
+    assert version.startswith("VER-"), version
+    version = version.split("VER-")[1]
     assert version, version
-    version = version.replace('-', '.')
+    version = version.replace("-", ".")
     return version
 
 
 def fetch_latest_poppler_release():
     soup = BeautifulSoup(requests.get(POPPLER_URL).content, features="xml")
     entry = soup.find("entry")
-    version = entry.find("summary").text
+    version = entry.find("title").text
 
+    assert version, version
+    assert version.startswith("poppler-")
+    version = version.split("poppler-")[1]
     assert version, version
     return version
 
