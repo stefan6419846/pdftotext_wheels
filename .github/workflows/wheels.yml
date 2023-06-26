@@ -6,7 +6,7 @@ on:
 
 # Environment variables for the automated update checks.
 env:
-  FREETYPE_VERSION: '2.13.0'
+  FREETYPE_VERSION: '2.13.1'
   PDFTOTEXT_VERSION: 'v2.2.2'
   POPPLER_VERSION: '23.06.0'
 
