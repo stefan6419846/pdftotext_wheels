@@ -15,3 +15,11 @@ The current utility files:
 ### Development
 
 All Python code inside this repository should be checked with `flake8 --max-line-length 160 .` (with the `pep8-naming` plugin enabled), all Bash code with `shellcheck prepare.sh`.
+
+### License
+
+All the scripts and the toolchain inside this repository are subject to the terms of the MIT license.
+
+Please note that this does not hold true for the generated wheel files. While the Python wrapper files are subject to the MIT license as well, they link against some more shared objects before or during installation. With the manylinux approach inside this repository, all non-standard shared objects are part of the wheel itself. For this reason, the wheels probably should be considered to be under the terms of the GPL (even when the Python package data states something different), as is [Poppler](https://gitlab.freedesktop.org/poppler/poppler#history-and-gpl-licensing) itself.
+
+Nevertheless, this should not be considered legal advice and you should review all dependencies and ensure the corresponding actions before actually using/distributing it. Consult an Attorney if required.
