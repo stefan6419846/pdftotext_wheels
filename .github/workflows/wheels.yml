@@ -17,7 +17,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: build
-      uses: RalfG/python-wheels-manylinux-build@v0.6.0
+      uses: RalfG/python-wheels-manylinux-build@v0.7.1
       with:
         python-versions: 'cp36-cp36m cp37-cp37m cp38-cp38 cp39-cp39 cp310-cp310 cp311-cp311'
         system-packages: 'fontconfig-devel libjpeg-turbo-devel openjpeg2-devel freetype-devel cairo-devel cmake wget'
