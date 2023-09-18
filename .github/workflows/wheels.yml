@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Build
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: build
       uses: RalfG/python-wheels-manylinux-build@v0.7.1
       with:
