@@ -58,7 +58,7 @@ jobs:
       # the tests currently import `pkg_resources`.
       - name: install setuptools
         run: |
-          pyhton -m pip install --upgrade setuptools
+          python -m pip install --upgrade setuptools
       # Install the wheel for the selected Python version and run the tests.
       # The wheel for Python version 3.11 has the identifier `cp311`, so we use some Bash replacement here.
       - name: test
