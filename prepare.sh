@@ -25,7 +25,7 @@ tar -xvf poppler.tar.gz
 cd poppler* || exit 1
 mkdir build
 cd build || exit 1
-cmake -DENABLE_BOOST=OFF -DENABLE_GPGME=OFF -DENABLE_LIBTIFF=OFF ..
+cmake -DENABLE_BOOST=OFF -DENABLE_GPGME=OFF -DENABLE_LIBTIFF=OFF -DENABLE_QT5=OFF ..
 make
 make install
 
