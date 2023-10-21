@@ -54,6 +54,11 @@ jobs:
         run: |
           wget https://github.com/jalan/pdftotext/archive/${PDFTOTEXT_VERSION}.tar.gz -O pdftotext.tar.gz
           tar --strip-components=1 -xvzf pdftotext.tar.gz
+      # Python >= 3.12 does not ship with `setuptools` by default any more, but
+      # the tests currently import `pkg_resources`.
+      - name: install setuptools
+        run: |
+          pyhton -m pip install --upgrade setuptools
       # Install the wheel for the selected Python version and run the tests.
       # The wheel for Python version 3.11 has the identifier `cp311`, so we use some Bash replacement here.
       - name: test
