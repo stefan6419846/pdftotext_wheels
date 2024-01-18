@@ -28,7 +28,7 @@ jobs:
     # Avoid restoring the cache by setting an unique key.
     # Otherwise, the build has strange side effects.
     - name: save wheels
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: build/dist
         key: wheels-${{ runner.os }}-${{ github.sha }}
@@ -45,7 +45,7 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
       - name: restore wheels
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: build/dist
           key: wheels-${{ runner.os }}-${{ github.sha }}
@@ -72,7 +72,7 @@ jobs:
     needs: test
     steps:
       - name: restore wheels
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: build/dist
           key: wheels-${{ runner.os }}-${{ github.sha }}
